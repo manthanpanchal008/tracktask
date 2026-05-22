@@ -6,6 +6,7 @@ import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
 import TasksPage from "./pages/TasksPage";
 import HistoryPage from "./pages/HistoryPage";
+import TeamPage from "./pages/TeamPage";
 import Layout from "./components/Layout/Layout";
 
 const PrivateRoute = ({ children }) => {
@@ -41,6 +42,7 @@ function AppRoutes() {
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="tasks" element={<TasksPage />} />
         <Route path="history" element={<HistoryPage />} />
+        <Route path="team" element={<TeamPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>

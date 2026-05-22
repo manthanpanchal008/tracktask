@@ -7,10 +7,8 @@ import {
   query,
   where,
   orderBy,
-  getDocs,
   onSnapshot,
   serverTimestamp,
-  Timestamp,
 } from "firebase/firestore";
 import { db } from "./config";
 
@@ -48,10 +46,7 @@ export const updateTaskStatus = async (taskId, status) => {
 // Update full task
 export const updateTask = async (taskId, taskData) => {
   const taskRef = doc(db, TASKS_COLLECTION, taskId);
-  await updateDoc(taskRef, {
-    ...taskData,
-    updatedAt: serverTimestamp(),
-  });
+  await updateDoc(taskRef, { ...taskData, updatedAt: serverTimestamp() });
 };
 
 // Delete a task
@@ -68,11 +63,11 @@ export const subscribeToTasksByDate = (userId, date, callback) => {
     orderBy("createdAt", "desc")
   );
   return onSnapshot(q, (snapshot) => {
-    const tasks = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate?.() || new Date(),
-      completedAt: doc.data().completedAt?.toDate?.() || null,
+    const tasks = snapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+      createdAt: d.data().createdAt?.toDate?.() || new Date(),
+      completedAt: d.data().completedAt?.toDate?.() || null,
     }));
     callback(tasks);
   });
@@ -86,11 +81,11 @@ export const subscribeToAllTasks = (userId, callback) => {
     orderBy("createdAt", "desc")
   );
   return onSnapshot(q, (snapshot) => {
-    const tasks = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate?.() || new Date(),
-      completedAt: doc.data().completedAt?.toDate?.() || null,
+    const tasks = snapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+      createdAt: d.data().createdAt?.toDate?.() || new Date(),
+      completedAt: d.data().completedAt?.toDate?.() || null,
     }));
     callback(tasks);
   });
@@ -115,4 +110,23 @@ export const importTasksFromArray = async (userId, tasksArray, date) => {
     })
   );
   await Promise.all(promises);
+};
+
+// ── TEAM VIEW ──────────────────────────────────────────────────────────────
+// Get ALL tasks for a specific date across all users (read-only team view)
+export const subscribeToTeamTasksByDate = (date, callback) => {
+  const q = query(
+    collection(db, TASKS_COLLECTION),
+    where("taskDate", "==", date),
+    orderBy("createdAt", "desc")
+  );
+  return onSnapshot(q, (snapshot) => {
+    const tasks = snapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+      createdAt: d.data().createdAt?.toDate?.() || new Date(),
+      completedAt: d.data().completedAt?.toDate?.() || null,
+    }));
+    callback(tasks);
+  });
 };

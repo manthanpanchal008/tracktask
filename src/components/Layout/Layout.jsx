@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, CheckSquare, History, LogOut, Zap } from "lucide-react";
+import { LayoutDashboard, CheckSquare, History, LogOut, Zap, Users } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
@@ -24,8 +24,9 @@ export default function Layout() {
 
   const navLinks = [
     { to: "/dashboard", icon: <LayoutDashboard size={18} />, label: "Dashboard" },
-    { to: "/tasks", icon: <CheckSquare size={18} />, label: "Today's Tasks" },
-    { to: "/history", icon: <History size={18} />, label: "History" },
+    { to: "/tasks",     icon: <CheckSquare size={18} />,      label: "Today's Tasks" },
+    { to: "/team",      icon: <Users size={18} />,             label: "Team View" },
+    { to: "/history",   icon: <History size={18} />,           label: "History" },
   ];
 
   return (

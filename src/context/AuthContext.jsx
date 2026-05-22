@@ -7,6 +7,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase/config";
+import { saveUserProfile } from "../firebase/userService";
 
 const AuthContext = createContext(null);
 
@@ -21,8 +22,12 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      // Save/update profile in Firestore whenever auth state changes
+      if (currentUser) {
+        try { await saveUserProfile(currentUser); } catch (_) {}
+      }
       setLoading(false);
     });
     return unsubscribe;
@@ -31,6 +36,8 @@ export const AuthProvider = ({ children }) => {
   const signup = async (email, password, displayName) => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(result.user, { displayName });
+    // Save profile with the displayName just set
+    await saveUserProfile({ ...result.user, displayName });
     return result;
   };
 
