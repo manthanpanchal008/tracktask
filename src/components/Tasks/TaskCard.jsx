@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { CheckCircle, Circle, Trash2, Edit2, RotateCcw } from "lucide-react";
+import React, { useState } from "react";
+import { CheckCircle, Trash2, Edit2, RotateCcw } from "lucide-react";
 import { updateTaskStatus, deleteTask } from "../../firebase/taskService";
 import toast from "react-hot-toast";
 
@@ -38,12 +38,13 @@ export default function TaskCard({ task, onEdit }) {
 
   return (
     <div className={`task-card priority-${task.priority} ${isCompleted ? "completed" : ""}`} style={isUnsolved ? { borderColor: "rgba(239,68,68,0.3)" } : {}}>
-      {/* Checkbox */}
+      {/* Clickable circle checkbox */}
       <button
         className={`task-checkbox ${isCompleted ? "checked" : ""}`}
         onClick={isCompleted ? markPending : markDone}
         disabled={loading}
         title={isCompleted ? "Mark as pending" : "Mark as complete"}
+        style={{ background: "none", flexShrink: 0 }}
       >
         {isCompleted && <CheckCircle size={14} color="white" />}
       </button>
@@ -69,20 +70,54 @@ export default function TaskCard({ task, onEdit }) {
 
       {/* Actions */}
       <div className="task-actions">
+        {/* ✅ Prominent Complete button for pending / unsolved tasks */}
         {!isCompleted && (
-          <button className="btn-icon tooltip" data-tip="Mark Unsolved" onClick={() => act(() => updateTaskStatus(task.id, "unsolved"), "Marked as unsolved")} disabled={loading}>
+          <button
+            className="btn-complete tooltip"
+            data-tip="Mark as Complete"
+            onClick={markDone}
+            disabled={loading}
+          >
+            <CheckCircle size={14} />
+            Complete
+          </button>
+        )}
+
+        {/* Reopen button for completed tasks */}
+        {isCompleted && (
+          <button
+            className="btn-reopen tooltip"
+            data-tip="Reopen Task"
+            onClick={markPending}
+            disabled={loading}
+          >
+            <RotateCcw size={14} />
+            Reopen
+          </button>
+        )}
+
+        {/* Mark Unsolved — only for pending tasks */}
+        {!isCompleted && !isUnsolved && (
+          <button
+            className="btn-icon tooltip"
+            data-tip="Mark Unsolved"
+            onClick={markUnsolved}
+            disabled={loading}
+          >
             <RotateCcw size={14} />
           </button>
         )}
-        {isCompleted && (
-          <button className="btn-icon tooltip" data-tip="Reopen" onClick={markPending} disabled={loading}>
-            <RotateCcw size={14} style={{ color: "var(--yellow)" }} />
-          </button>
-        )}
+
         <button className="btn-icon tooltip" data-tip="Edit" onClick={() => onEdit(task)} disabled={loading}>
           <Edit2 size={14} />
         </button>
-        <button className="btn-icon tooltip" data-tip="Delete" onClick={remove} disabled={loading} style={{ color: "var(--red)" }}>
+        <button
+          className="btn-icon tooltip"
+          data-tip="Delete"
+          onClick={remove}
+          disabled={loading}
+          style={{ color: "var(--red)" }}
+        >
           <Trash2 size={14} />
         </button>
       </div>

@@ -119,6 +119,12 @@ body {
 .btn-sm { padding: 6px 12px; font-size: 12px; }
 .btn-icon { padding: 8px; border-radius: 8px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
 .btn-icon:hover { background: rgba(139,92,246,0.1); color: var(--purple-light); border-color: var(--border-hover); }
+.btn-complete { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #10b981; font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); }
+.btn-complete:hover { background: rgba(16,185,129,0.22); border-color: #10b981; transform: translateY(-1px); }
+.btn-complete:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-reopen { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #f59e0b; font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); }
+.btn-reopen:hover { background: rgba(245,158,11,0.22); border-color: #f59e0b; transform: translateY(-1px); }
+.btn-reopen:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 /* Cards */
 .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; transition: var(--transition); }
